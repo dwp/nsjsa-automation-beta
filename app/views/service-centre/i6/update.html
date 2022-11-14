@@ -6,6 +6,7 @@
 
 {% block content %}
 {# {{ data | dump('\t') }}  #}
+
 {% set failHtml %}
 {{ govukRadios({
   idPrefix: "failed-contact",
@@ -37,6 +38,27 @@
 }) }}
 {% endset -%}
 
+{% set withdrawHtml %}
+  {{ govukCheckboxes({
+      idPrefix: 'withdraw',
+      name: 'withdrawConfirm',
+      fieldset: {
+        legend: {
+          text: "Are you sure you want to withdraw this claim?",
+          isPageHeading: false,
+          classes: "govuk-fieldset__legend--s"
+        }
+      },
+      items: [
+          {
+              value: "withdrawal-confirmed",
+              text: "Yes"
+          }                  
+      ]
+    })
+  }}
+{% endset -%}
+
 {{ govukBackLink({
   text: "Back",
   href: "javascript:history.back()"
@@ -46,8 +68,6 @@
     <div class="govuk-grid-column-two-thirds">
 
       <form action="update" method="post">
-
-      {% if data['claimStatus'] == 'ID-check-needed' %}
 
           {{ govukRadios({
             idPrefix: "status",
@@ -78,35 +98,16 @@
               {
                 value: "suspected-fraud",
                 text: "Suspected fraud"
-              }
-            ]
-          }) }}
-
-      {% elif data['claimStatus'] == 'ID-template-needed' %}
-
-          {{ govukRadios({
-            idPrefix: "status",
-            name: "claimStatus",
-            fieldset: {
-              legend: {
-                text: "Update claim status",
-                isPageHeading: true,
-                classes: "govuk-fieldset__legend--l"
-              }
-            },
-            items: [
-              {
-                value: "ID-check-needed",
-                text: "ID check needed"
               },
               {
-                value: "ID-check-not-needed",
-                text: "ID check not needed"
+                value:"withdrawn",
+                text: "Withdrawn",
+                conditional: {
+                  html: withdrawHtml
+                }
               }
             ]
           }) }}
-
-        {% endif %}
 
         {{ govukButton({
           text: "Continue"

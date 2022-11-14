@@ -13,8 +13,6 @@
   {% endfor %}
 {% endblock %}
 
-{% set htmlClasses = htmlClasses | default("jsa-automation") %}
-
 {% block header %}
     {{ dwpHeader({
         "homepageUrl": "/",
@@ -23,5 +21,4 @@
         "containerClasses": "govuk-width-container"
     }) }}
 {% endblock %}
-
 {% block footer %}{% endblock %}

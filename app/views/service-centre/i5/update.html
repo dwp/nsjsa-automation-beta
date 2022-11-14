@@ -6,6 +6,7 @@
 
 {% block content %}
 {# {{ data | dump('\t') }}  #}
+
 {% set failHtml %}
 {{ govukRadios({
   idPrefix: "failed-contact",
@@ -37,6 +38,28 @@
 }) }}
 {% endset -%}
 
+{% set withdrawHtml %}
+  {{ govukCheckboxes({
+      idPrefix: 'withdraw',
+      name: 'withdrawConfirm',
+      fieldset: {
+        legend: {
+          text: "Are you sure you want to withdraw this claim?",
+          isPageHeading: false,
+          classes: "govuk-fieldset__legend--s"
+        }
+      },
+      items: [
+          {
+              value: "withdrawal-confirmed",
+              text: "Yes"
+          }                  
+      ]
+    })
+  }}
+{% endset -%}
+
+
 {{ govukBackLink({
   text: "Back",
   href: "javascript:history.back()"
@@ -48,6 +71,41 @@
       <form action="update" method="post">
 
       {% if data['s'] == 's9' %}
+
+          {{ govukRadios({
+            idPrefix: "status",
+            name: "claimStatus",
+            fieldset: {
+              legend: {
+                text: "Update claim status",
+                isPageHeading: true,
+                classes: "govuk-fieldset__legend--l"
+              }
+            },
+            items: [
+              {
+                value: "id-verified",
+                text: "ID verified"
+              },
+              {
+                value: "suspected-fraud",
+                text: "Suspected fraud"
+              },
+              {
+                value: "id-check-needed",
+                text: "ID check needed"
+              },
+              {
+                value: "withdrawn",
+                text: "Withdrawn",
+                conditional: {
+                  html: withdrawHtml
+                }
+              }
+            ]
+          }) }}
+
+          {% elif data['s'] == 's7' or data['s'] == 's8' or data['s'] == 's10' %}
 
           {{ govukRadios({
             idPrefix: "status",
@@ -78,30 +136,12 @@
               {
                 value: "suspected-fraud",
                 text: "Suspected fraud"
-              }
-            ]
-          }) }}
-
-      {% elif data['s'] == 's7' or data['s'] == 's8' or data['s'] == 's10' %}
-
-          {{ govukRadios({
-            idPrefix: "status",
-            name: "claimStatus",
-            fieldset: {
-              legend: {
-                text: "Update claim status",
-                isPageHeading: true,
-                classes: "govuk-fieldset__legend--l"
-              }
-            },
-            items: [
-              {
-                value: "ID-check-needed",
-                text: "ID check needed"
               },
-              {
-                value: "ID-check-not-needed",
-                text: "ID check not needed"
+              { value: "withdrawn",
+                text: "Withdrawn",
+                conditional: {
+                  html: withdrawHtml
+                }
               }
             ]
           }) }}
